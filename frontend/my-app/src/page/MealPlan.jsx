@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useLang } from "@/lib/LanguageContext";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
@@ -32,18 +32,18 @@ export default function MealPlan() {
 
   const { data: mealPlans = [] } = useQuery({
     queryKey,
-    queryFn: () => base44.entities.MealPlan.filter({
+    queryFn: () => savouraClient.entities.MealPlan.filter({
       date: { $gte: startDate, $lte: endDate }
     }),
   });
 
   const { data: recipes = [] } = useQuery({
     queryKey: ["recipes"],
-    queryFn: () => base44.entities.Recipe.list("-created_date"),
+    queryFn: () => savouraClient.entities.Recipe.list("-created_date"),
   });
 
   const createMutation = useMutation({
-    mutationFn: (data) => base44.entities.MealPlan.create(data),
+    mutationFn: (data) => savouraClient.entities.MealPlan.create(data),
     // Optimistic update
     onMutate: async (newEntry) => {
       await queryClient.cancelQueries({ queryKey });
@@ -59,7 +59,7 @@ export default function MealPlan() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => base44.entities.MealPlan.delete(id),
+    mutationFn: (id) => savouraClient.entities.MealPlan.delete(id),
     // Optimistic update
     onMutate: async (id) => {
       await queryClient.cancelQueries({ queryKey });

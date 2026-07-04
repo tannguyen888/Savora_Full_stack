@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sparkles, X, Loader2 } from "lucide-react";
@@ -18,7 +18,7 @@ export default function AIRecipeGenerator({ onGenerated }) {
     setLoading(true);
     setError("");
     try {
-      const result = await base44.integrations.Core.InvokeLLM({
+      const result = await savouraClient.integrations.Core.InvokeLLM({
         prompt: `Generate a complete, detailed recipe for: "${prompt}". Return only structured recipe JSON.`,
       });
 

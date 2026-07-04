@@ -3,23 +3,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 
 function CommentSection({postId}) {
     const[text, setText] = useState("");
     const queryClient = useQueryClient();
     const {data: me} = useQuery({
       queryKey: ["me"],
-      queryFn: () => base44.entities.User.get("me"),
+      queryFn: () => savouraClient.entities.User.get("me"),
     });
 
     const{data:comments = [], isLoading} = useQuery({
       queryKey: ["comments", postId],
-      queryFn: () => base44.entities.Comment.list("-created_date", { post_id: postId }),
+      queryFn: () => savouraClient.entities.Comment.list("-created_date", { post_id: postId }),
     });
 
     const createMutation = useMutation({
-        mutationFn: (newComment) => base44.entities.Comment.create(newComment),
+        mutationFn: (newComment) => savouraClient.entities.Comment.create(newComment),
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["comments", postId] });
             setText("");
