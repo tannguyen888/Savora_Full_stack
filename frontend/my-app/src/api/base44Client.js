@@ -1,1 +1,1 @@
-export { base44 as default, base44 } from './Client'
+export { savouraClient as default, savouraClient, base44 } from './Client'

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { Button } from "@/components/ui/button";
 import { Camera, Sparkles, X, Loader2, Image } from "lucide-react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
@@ -16,7 +16,7 @@ export default function IngredientScanner({ onGenerated }) {
     if (!file) return;
     setPreview(URL.createObjectURL(file));
     setLoading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const { file_url } = await savouraClient.integrations.Core.UploadFile({ file });
     setUploadedUrl(file_url);
     setLoading(false);
   };
@@ -25,7 +25,7 @@ export default function IngredientScanner({ onGenerated }) {
     if (!uploadedUrl) return;
     setLoading(true);
     try {
-      const result = await base44.integrations.Core.InvokeLLM({
+      const result = await savouraClient.integrations.Core.InvokeLLM({
         prompt: "Look at this image, identify the visible ingredients, and generate one realistic recipe as JSON.",
         file_urls: [uploadedUrl],
       });

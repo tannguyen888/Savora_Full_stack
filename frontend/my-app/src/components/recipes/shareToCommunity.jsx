@@ -1,7 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { Button } from "@/components/ui/button";
 import { Share2 } from "lucide-react";
 import { useLang } from "@/lib/LanguageContext";
@@ -10,11 +10,11 @@ export default function ShareToCommunityButton({ recipe }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { t } = useLang();
-  const { data: me } = useQuery({ queryKey: ["me"], queryFn: () => base44.auth.me() });
+  const { data: me } = useQuery({ queryKey: ["me"], queryFn: () => savouraClient.auth.me() });
 
   const shareMutation = useMutation({
     mutationFn: () =>
-      base44.entities.CommunityPost.create({
+      savouraClient.entities.CommunityPost.create({
         author_name: me?.full_name || me?.email || "Anonymous",
         content: `Check out this recipe: ${recipe.name}`,
         recipe_id: recipe.id,

@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Savora Mobile",
+    "slug": "savora-mobile",
+    "scheme": "savora",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "plugins": ["expo-router"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

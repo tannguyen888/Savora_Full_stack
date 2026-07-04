@@ -6,10 +6,10 @@ import { describe, expect, test, vi, beforeEach } from 'vitest'
 
 import AppHeader from './AppHeader'
 import { LanguageProvider } from '@/lib/LanguageContext'
-import { base44 } from '@/api/base44Client'
+import { savouraClient } from '@/api/savouraClient'
 
-vi.mock('@/api/base44Client', () => ({
-  base44: {
+vi.mock('@/api/savouraClient', () => ({
+  savouraClient: {
     auth: {
       me: vi.fn(),
     },
@@ -46,12 +46,12 @@ describe('AppHeader auth button', () => {
     renderHeader()
 
     expect(screen.getByText('Login')).toBeInTheDocument()
-    expect(base44.auth.me).not.toHaveBeenCalled()
+    expect(savouraClient.auth.me).not.toHaveBeenCalled()
   })
 
   test('shows user full name when token exists and profile is loaded', async () => {
     localStorage.setItem('savora_token', 'mock-token')
-    base44.auth.me.mockResolvedValue({ fullName: 'Jannguyen' })
+    savouraClient.auth.me.mockResolvedValue({ fullName: 'Jannguyen' })
 
     renderHeader()
 
@@ -60,6 +60,7 @@ describe('AppHeader auth button', () => {
     })
 
     expect(screen.queryByText('Login')).not.toBeInTheDocument()
-    expect(base44.auth.me).toHaveBeenCalledTimes(1)
+    expect(savouraClient.auth.me).toHaveBeenCalledTimes(1)
   })
 })
+

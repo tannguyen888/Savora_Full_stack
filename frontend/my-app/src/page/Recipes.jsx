@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { Button } from "@/components/ui/button";
 import { Plus, UtensilsCrossed } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,7 +18,7 @@ export default function Recipes() {
 
   const { data: recipes = [], isLoading } = useQuery({
     queryKey: ["recipes"],
-    queryFn: () => base44.entities.Recipe.list("-created_date"),
+    queryFn: () => savouraClient.entities.Recipe.list("-created_date"),
   });
 
   const handleRefresh = useCallback(async () => {

@@ -207,7 +207,7 @@ const LOCAL_ME = {
   email: 'local@savora.app',
 }
 
-export const base44 = {
+export const savouraClient = {
   entities: {
     Recipe: {
       async get(id) {
@@ -266,7 +266,7 @@ export const base44 = {
     User: {
       async get(id) {
         if (id === 'me') {
-          return base44.auth.me()
+          return savouraClient.auth.me()
         }
         return { ...LOCAL_ME, id }
       },
@@ -289,7 +289,7 @@ export const base44 = {
     },
     Post: {
       async create(post) {
-        return base44.entities.CommunityPost.create(post)
+        return savouraClient.entities.CommunityPost.create(post)
       },
       async like(postId) {
         const updated = await request(`/community/posts/${postId}/like`, {
@@ -394,4 +394,5 @@ export const base44 = {
   },
 }
 
-export default base44
+export { savouraClient as base44 }
+export default savouraClient

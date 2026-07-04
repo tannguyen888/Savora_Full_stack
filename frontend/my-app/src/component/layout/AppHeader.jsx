@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ChefHat, Plus, CalendarDays, UtensilsCrossed, Settings2Icon } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { useLang } from "@/lib/LanguageContext";
 
 
@@ -13,7 +13,7 @@ export default function AppHeader() {
   const token = typeof window !== "undefined" ? localStorage.getItem("savora_token") : null;
   const { data: currentUser } = useQuery({
     queryKey: ["me", token],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => savouraClient.auth.me(),
     enabled: Boolean(token),
     retry: false,
   });
@@ -80,3 +80,4 @@ export default function AppHeader() {
   );
 }
       
+

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Users } from "lucide-react";
 import PostComposer from "@/component/community/PostComposer";
@@ -10,7 +10,7 @@ export default function Community() {
   const { t } = useLang();
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ["communityPosts"],
-    queryFn: () => base44.entities.CommunityPost.list("-created_date"),
+    queryFn: () => savouraClient.entities.CommunityPost.list("-created_date"),
   });
 
   return (

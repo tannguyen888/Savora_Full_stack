@@ -7,7 +7,7 @@ const api = axios.create({
 
 export default api;
 
-export const base44 = {
+export const savouraClient = {
   // Generic HTTP methods
   get: (url) => api.get(url),
   post: (url, data) => api.post(url, data),
@@ -47,3 +47,5 @@ export const base44 = {
     },
   },
 };
+
+export const base44 = savouraClient;

@@ -3,6 +3,7 @@ package com.savora.demo.Configuration;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.net.URI;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.util.StringUtils;
 
 import com.savora.demo.modal.User;
 import com.savora.demo.service.CustomOAuth2User;
@@ -36,6 +38,56 @@ public class SecurityConfig {
     @Value("${app.cors.allowed-origins}")
     private String allowedOrigins;
 
+    private String normalizeSuccessRedirect(String requestedRedirect) {
+        if (!StringUtils.hasText(requestedRedirect)) {
+            return frontendBaseUrl + "/oauth-success";
+        }
+
+        String value = requestedRedirect.trim();
+        if (value.startsWith("/")) {
+            return frontendBaseUrl + value;
+        }
+
+        try {
+            URI uri = URI.create(value);
+            String host = uri.getHost();
+            if (host == null) {
+                return frontendBaseUrl + "/oauth-success";
+            }
+
+            boolean isLocalhost = "localhost".equalsIgnoreCase(host) || "127.0.0.1".equals(host);
+            if (isLocalhost) {
+                return value;
+            }
+
+            List<String> origins = Stream.of(allowedOrigins.split(","))
+                    .map(String::trim)
+                    .filter(s -> !s.isEmpty())
+                    .collect(Collectors.toList());
+
+            String origin = uri.getScheme() + "://" + uri.getHost()
+                    + (uri.getPort() > 0 ? ":" + uri.getPort() : "");
+
+            if (origins.contains(origin)) {
+                return value;
+            }
+        } catch (Exception ignored) {
+        }
+
+        return frontendBaseUrl + "/oauth-success";
+    }
+
+    private String toLoginErrorUrl(String successRedirectBase) {
+        try {
+            URI uri = URI.create(successRedirectBase);
+            String origin = uri.getScheme() + "://" + uri.getHost()
+                    + (uri.getPort() > 0 ? ":" + uri.getPort() : "");
+            return origin + "/login?error=oauth_failed";
+        } catch (Exception ignored) {
+            return frontendBaseUrl + "/login?error=oauth_failed";
+        }
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
@@ -52,11 +104,18 @@ public class SecurityConfig {
                                     List.of(new SimpleGrantedAuthority(user.getRole().name())));
 
                             String jwt = jwtProvider.generateToken(authToken);
-                            String redirectUrl = frontendBaseUrl + "/oauth-success?token=" + jwt;
+                            String requestedRedirect = (String) request.getSession().getAttribute("oauth_redirect");
+                            request.getSession().removeAttribute("oauth_redirect");
+                            String successBase = normalizeSuccessRedirect(requestedRedirect);
+                            String separator = successBase.contains("?") ? "&" : "?";
+                            String redirectUrl = successBase + separator + "token=" + jwt;
                             response.sendRedirect(redirectUrl);
                         })
                         .failureHandler((request, response, exception) -> {
-                            String redirectUrl = frontendBaseUrl + "/login?error=oauth_failed";
+                            String requestedRedirect = (String) request.getSession().getAttribute("oauth_redirect");
+                            request.getSession().removeAttribute("oauth_redirect");
+                            String successBase = normalizeSuccessRedirect(requestedRedirect);
+                            String redirectUrl = toLoginErrorUrl(successBase);
                             response.sendRedirect(redirectUrl);
                         }))
 

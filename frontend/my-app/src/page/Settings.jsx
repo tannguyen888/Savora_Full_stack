@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -18,17 +18,17 @@ export default function Settings() {
 
   const { data: user } = useQuery({
     queryKey: ["me"],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => savouraClient.auth.me(),
   });
 
   const handleLogout = () => {
-    base44.auth.logout("/login");
+    savouraClient.auth.logout("/login");
   };
 
   const handleDeleteAccount = async () => {
     setDeleting(true);
-    if (user?.id) await base44.entities.User.delete(user.id);
-    base44.auth.logout("/login");
+    if (user?.id) await savouraClient.entities.User.delete(user.id);
+    savouraClient.auth.logout("/login");
   };
 
   return (

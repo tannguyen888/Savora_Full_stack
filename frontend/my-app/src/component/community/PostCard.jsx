@@ -5,7 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CommentSection from "@/component/community/CommentSection";
 import { Button } from "@/components/ui/button";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { useLang } from "@/lib/LanguageContext";
 
 function PostCard({ post }) {
@@ -17,14 +17,14 @@ function PostCard({ post }) {
   const queryClient = useQueryClient();
 
   const shareMutation = useMutation({
-    mutationFn: () => base44.entities.Post.share(post.id),
+    mutationFn: () => savouraClient.entities.Post.share(post.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
     },
   });
 
   const likeMutation = useMutation({
-    mutationFn: () => base44.entities.Post.like(post.id),
+    mutationFn: () => savouraClient.entities.Post.like(post.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
     },

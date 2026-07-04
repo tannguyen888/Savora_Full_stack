@@ -8,7 +8,7 @@ import {
   Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose,
 } from "@/components/ui/drawer";
 import { Plus, Trash2, GripVertical, Upload, ChevronDown } from "lucide-react";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const CATEGORIES = ["breakfast", "lunch", "dinner", "snack", "dessert", "drink"];
@@ -122,7 +122,7 @@ export default function RecipeForm({ recipe, onSubmit, isSubmitting }) {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+    const { file_url } = await savouraClient.integrations.Core.UploadFile({ file });
     handleChange("image_url", file_url);
     setUploading(false);
   };

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { base44 } from "@/api/base44Client";
+import { savouraClient } from "@/api/savouraClient";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,9 +24,9 @@ export default function Register() {
     }
     setLoading(true);
     try {
-      const result = await base44.auth.register({ email, password });
+      const result = await savouraClient.auth.register({ email, password });
       if (result?.jwt) {
-        base44.auth.setToken(result.jwt);
+        savouraClient.auth.setToken(result.jwt);
       }
       window.location.href = "/";
     } catch (err) {
@@ -37,7 +37,7 @@ export default function Register() {
   };
 
   const handleGoogle = () => {
-    base44.auth.loginWithProvider("google", "/");
+    savouraClient.auth.loginWithProvider("google", "/");
   };
 
   return (
@@ -142,3 +142,4 @@ export default function Register() {
     </AuthLayout>
   );
 }
+

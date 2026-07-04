@@ -1,8 +1,11 @@
 package com.savora.demo.controller;
 
 import java.util.List;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import jakarta.validation.Valid;
+import jakarta.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -58,9 +61,12 @@ public class AuthController {
 
     @GetMapping("/login/google")
     public ResponseEntity<Void> loginGoogle(
-            @RequestParam(defaultValue = "/") String redirect) {
+            @RequestParam(defaultValue = "/") String redirect,
+            HttpSession session) {
+        session.setAttribute("oauth_redirect", redirect);
         return ResponseEntity.status(302)
-                .header("Location", "/oauth2/authorization/google?redirect=" + redirect)
+                .header("Location",
+                        "/oauth2/authorization/google?redirect=" + URLEncoder.encode(redirect, StandardCharsets.UTF_8))
                 .build();
     }
 

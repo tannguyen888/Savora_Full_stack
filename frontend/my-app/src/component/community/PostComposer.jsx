@@ -1,6 +1,6 @@
 import {useState} from "react";
 import{useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
-import {base44} from "@/api/base44Client";
+import {savouraClient} from "@/api/savouraClient";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { UtensilsCrossed, X, Send } from "lucide-react";
@@ -16,16 +16,16 @@ function PostComposer() {
     const queryClient = useQueryClient();
     const {data: me} = useQuery({
     queryKey: ["me", token],
-    queryFn: () => base44.auth.me(),
+    queryFn: () => savouraClient.auth.me(),
     enabled: Boolean(token),
     retry: false,
     });
     const{data: recipes = []} = useQuery({
         queryKey: ["recipes"],
-        queryFn: () => base44.entities.Recipe.list("-created_date"),
+        queryFn: () => savouraClient.entities.Recipe.list("-created_date"),
     });
     const createMutation = useMutation({
-        mutationFn: (newPost) => base44.entities.Post.create(newPost),
+        mutationFn: (newPost) => savouraClient.entities.Post.create(newPost),
         onSuccess: () => {  
         queryClient.invalidateQueries({ queryKey: ["communityPosts"] });
          setContent(""); 
