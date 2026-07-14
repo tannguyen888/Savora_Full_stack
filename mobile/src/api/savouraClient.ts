@@ -320,5 +320,5 @@ export const savouraClient = {
   }
 };
 
-export const base44Mobile = savouraClient;
+export const Mobile = savouraClient;
 
