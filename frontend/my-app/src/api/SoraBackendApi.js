@@ -48,4 +48,4 @@ export const savouraClient = {
   },
 };
 
-export const base44 = savouraClient;
+export const SoraBackendApi = savouraClient;
